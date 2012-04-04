@@ -1,0 +1,6 @@
+= sinc
+
+A very simple {sinatra}[http://www.sinatrarb.com/] script with a HAML template, used to quickly generate a simple website.
+* It uses text files with {Textile}[http://www.textism.com/tools/textile/] markup as source material for the pages.
+* Uses {Dropbox}[http://www.dropbox.com] to store the source files
+
