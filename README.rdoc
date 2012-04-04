@@ -15,3 +15,5 @@ A very simple {sinatra}[http://www.sinatrarb.com/] script with a HAML template, 
 * view the application in a web browser and authorize it to use a folder in your Dropbox. 
 <b>Note:</b> By default <tt>thin</tt> starts on port <tt>4567</tt>
 
+== Hosting tips
+You can easily setup sinc on {Cloudfoundry}[http://www.cloudfoundry.com]
