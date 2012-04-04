@@ -1,0 +1,27 @@
+%html
+  %head
+    %link{:rel => "stylesheet", :type => "text/css", :href => "bootstrap/css/bootstrap.css"}
+    %title= params[:name]
+  %body
+    .container
+      - if @files.length > 0 
+        .navbar
+          .navbar-inner
+            .container
+              %ul.nav
+                %li
+                  %a{ :href => '/' }
+                    Index
+                - @files.each do |file|
+                  - link = File.basename(file['path']).gsub!(/.txt$/,'')
+                  %li
+                    %a{ :href => link }= link
+      .page-header 
+        %h1= params[:name]
+        %p
+          - if @file
+            -# - content = @client.get_file(@file['path'])
+            - title = File.basename(params[:name]).gsub!(/.txt$/,'')
+            %h1= title
+            %p= @file
+
