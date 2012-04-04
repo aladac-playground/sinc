@@ -1,3 +1,4 @@
 Gemfile.lock
 public/bootstrap
 vendor
+token.yaml

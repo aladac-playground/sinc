@@ -67,7 +67,9 @@ get '/:name' do
   begin
     @file = @client.get_file(params[:name] + ".txt")
   rescue Exception => e
-    halt "No files"
+    @client.put_file('/Index.txt', open('template/Index.txt'))
+    sleep 3
+    redirect '/'
   end
 
   @files = @client.search("/",".txt")

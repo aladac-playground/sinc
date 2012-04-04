@@ -1,0 +1,9 @@
+h1. Congratulations on succesfully setting up *sinc*
+
+---
+
+The next steps to use *sinc* should be:
+
+* Visiting you sinc folder (located in Apps/sinc subfolder of your Dropbox folder)
+* Putting some text files there from which sinc will put together your simple site
+* Taking a look at "Textile":http://www.textism.com/tools/textile/ to know how to easily format you micro site
