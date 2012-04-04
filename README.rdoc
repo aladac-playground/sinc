@@ -4,3 +4,11 @@ A very simple {sinatra}[http://www.sinatrarb.com/] script with a HAML template, 
 * It uses text files with {Textile}[http://www.textism.com/tools/textile/] markup as source material for the pages.
 * Uses {Dropbox}[http://www.dropbox.com] to store the source files
 
+== Installation
+* clone the repository 
+  git clone git@github.com:quanchi/sinc.git
+* use Bundler to install the required gems
+  bundle install 
+* start the application
+* view the application in a web browser and authorize it to use a folder in your Dropbox
+
