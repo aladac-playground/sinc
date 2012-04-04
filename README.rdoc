@@ -13,5 +13,5 @@ A very simple {sinatra}[http://www.sinatrarb.com/] script with a HAML template, 
 * start the application
     ./sinc.rb
 * view the application in a web browser and authorize it to use a folder in your Dropbox. 
-<b>Note</b>By default <tt>thin</tt> starts on port <tt>4567</tt>
+<b>Note:</b> By default <tt>thin</tt> starts on port <tt>4567</tt>
 
