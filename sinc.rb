@@ -7,16 +7,15 @@ require "yaml"
 require "dropbox_sdk"
 require "sinatra"
 require "pp"
+require "RedCloth"
 
 enable :sessions
 
 token_file = "token.yaml"
 
-if File.exists?(token_file)
-  token = YAML.load_file("token.yaml")
-end
-
 get '/auth' do
+  # if we got redirected from dropbox.com to here we are getting the access token 
+  # and saving it for future use
   if params[:oauth_token] 
     dropbox_session = DropboxSession.deserialize(session[:dropbox_session])
     access_token = dropbox_session.get_access_token
@@ -24,44 +23,60 @@ get '/auth' do
     fh = File.new(token_file,"w")
     fh.puts access_hash.to_yaml
     fh.close
-    session[:dropbox_session] = dropbox_session.serialize # re-serialize the authenticated session
-    redirect '/'
+    session[:dropbox_session] = dropbox_session.serialize 
+    redirect back
   else
+    # if we got redirected from another page...
     dropbox_session = DropboxSession.new('pmdl9ie7lltknnb','8qf70i3xust7m6l')
     session[:dropbox_session] = dropbox_session.serialize
-    if token and dropbox_session.set_access_token(token[:key], token[:secret])
-      session[:dropbox_session] = dropbox_session.serialize
-      redirect '/'
-    else
-      redirect dropbox_session.get_authorize_url(callback=request.url)
-    end
+    # redirect to dropbox.com to authorize
+    redirect dropbox_session.get_authorize_url(callback=request.url)
   end
 end
 
 get '/' do 
-  redirect '/index'
+  redirect '/Index'
 end
 
 get '/:name' do
-  if session[:dropbox_session] 
-    dropbox_session = DropboxSession.deserialize(session[:dropbox_session])
-    @client = DropboxClient.new(dropbox_session, :app_folder)
-    # client.account_info().inspect
-    # dropbox_session.access_token.key
-    begin
-      @file = @client.get_file(params[:name] + ".txt")
-    rescue Exception => e
-      halt unless params[:name] == 'index'
+  # if a dropbox session exists try to attach to it ...
+  pp session
+  pp @token
+
+  # If a dropbox session doesn't exist create a new one
+  if ! session[:dropbox_session]
+    dropbox_session = DropboxSession.new('pmdl9ie7lltknnb','8qf70i3xust7m6l')
+
+    # If a token file exists load it 
+    if File.exists?(token_file)
+      @token = YAML.load_file("token.yaml")
     end
-    
-    @files = @client.search("/",".txt")
-    haml :template
-  else
-    redirect '/auth'
+
+    # If there was something inside the token file try to use it 
+    if @token
+      begin
+        dropbox_session.set_access_token(@token[:key], @token[:secret])
+        session[:dropbox_session] = dropbox_session.serialize
+      rescue Exception => e
+        redirect '/auth'
+      end
+    else
+      redirect '/auth'
+    end
   end
+
+  dropbox_session = DropboxSession.deserialize(session[:dropbox_session])
+  @client = DropboxClient.new(dropbox_session, :app_folder)
+  begin
+    @file = @client.get_file(params[:name] + ".txt")
+  rescue Exception => e
+    halt unless params[:name] == 'index'
+  end
+
+  @files = @client.search("/",".txt")
+  haml :template
 end
 
 get "/logout" do
   session = {}
-  # redirect "/"
 end
