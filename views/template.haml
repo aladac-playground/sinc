@@ -6,9 +6,6 @@
     .container
       - if @files.length > 0 
         %ul.nav.nav-pills
-          %li
-            %a{ :href => '/' }
-              Index
           - @files.each do |file|
             - link = File.basename(file['path']).gsub!(/.txt$/,'')
             %li

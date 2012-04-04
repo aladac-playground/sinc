@@ -6,8 +6,8 @@ require "haml"
 require "yaml"
 require "dropbox_sdk"
 require "sinatra"
-require "pp"
 require "RedCloth"
+require "pp"
 
 enable :sessions
 
@@ -24,7 +24,7 @@ get '/auth' do
     fh.puts access_hash.to_yaml
     fh.close
     session[:dropbox_session] = dropbox_session.serialize 
-    redirect back
+    redirect '/'
   else
     # if we got redirected from another page...
     dropbox_session = DropboxSession.new('pmdl9ie7lltknnb','8qf70i3xust7m6l')
@@ -39,23 +39,20 @@ get '/' do
 end
 
 get '/:name' do
-  # if a dropbox session exists try to attach to it ...
   pp session
-  pp @token
-
   # If a dropbox session doesn't exist create a new one
   if ! session[:dropbox_session]
     dropbox_session = DropboxSession.new('pmdl9ie7lltknnb','8qf70i3xust7m6l')
 
     # If a token file exists load it 
     if File.exists?(token_file)
-      @token = YAML.load_file("token.yaml")
+      token = YAML.load_file("token.yaml")
     end
 
     # If there was something inside the token file try to use it 
-    if @token
+    if token
       begin
-        dropbox_session.set_access_token(@token[:key], @token[:secret])
+        dropbox_session.set_access_token(token[:key], token[:secret])
         session[:dropbox_session] = dropbox_session.serialize
       rescue Exception => e
         redirect '/auth'
@@ -70,7 +67,7 @@ get '/:name' do
   begin
     @file = @client.get_file(params[:name] + ".txt")
   rescue Exception => e
-    halt unless params[:name] == 'index'
+    halt "No files"
   end
 
   @files = @client.search("/",".txt")
