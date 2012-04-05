@@ -54,7 +54,7 @@ get '/:name' do
       begin
         dropbox_session.set_access_token(token[:key], token[:secret])
         session[:dropbox_session] = dropbox_session.serialize
-      rescue Exception => e
+      rescue Net::HTTPUnauthorized
         redirect '/auth'
       end
     else
@@ -63,13 +63,25 @@ get '/:name' do
   end
 
   dropbox_session = DropboxSession.deserialize(session[:dropbox_session])
+
+  pp dropbox_session.authorized?
+  if ! dropbox_session.authorized?
+    redirect '/auth'
+  end
+
   @client = DropboxClient.new(dropbox_session, :app_folder)
   begin
     @file = @client.get_file(params[:name] + ".txt")
-  rescue Exception => e
-    @client.put_file('/Index.txt', open('template/Index.txt'))
-    sleep 3
-    redirect '/'
+  rescue DropboxError => e
+    pp e.error
+    begin
+      @client.put_file('/Index.txt', open('template/Index.txt'))
+      sleep 3
+      redirect '/'
+    rescue DropboxAuthError => e
+      puts e.inspect
+      redirect '/auth'
+    end
   end
 
   @files = @client.search("/",".txt")
