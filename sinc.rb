@@ -90,4 +90,5 @@ end
 
 get "/logout" do
   session = {}
+  File.unlink("token.yaml")
 end
