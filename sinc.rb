@@ -38,6 +38,14 @@ get '/' do
   redirect '/Index'
 end
 
+get "/logout" do
+  session = {}
+  if File.exists?('token.yaml')
+    File.unlink("token.yaml")
+  end
+  halt "Logged out"
+end
+
 get '/:name' do
   pp session
   # If a dropbox session doesn't exist create a new one
@@ -88,7 +96,3 @@ get '/:name' do
   haml :template
 end
 
-get "/logout" do
-  session = {}
-  File.unlink("token.yaml")
-end
