@@ -83,7 +83,7 @@ get '/:name' do
   rescue DropboxError => e
     pp e.error
     begin
-      @client.put_file('/Index.txt', open('template/Index.txt'))
+      @client.put_file('/Index.txt', open('template/Index.txt')) if params[:name] == "Index"
       sleep 3
       redirect '/'
     rescue DropboxAuthError => e
