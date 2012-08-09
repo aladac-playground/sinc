@@ -27,7 +27,8 @@ get '/auth' do
     redirect '/'
   else
     # if we got redirected from another page...
-    dropbox_session = DropboxSession.new('pmdl9ie7lltknnb','8qf70i3xust7m6l')
+    keys = YAML.load_file("keys.yaml")
+    dropbox_session = DropboxSession.new(keys['key'], keys['secret'])
     session[:dropbox_session] = dropbox_session.serialize
     # redirect to dropbox.com to authorize
     redirect dropbox_session.get_authorize_url(callback=request.url)
