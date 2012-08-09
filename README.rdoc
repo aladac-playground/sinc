@@ -10,6 +10,7 @@ A very simple {sinatra}[http://www.sinatrarb.com/] script with a HAML template, 
     cd sinc
 * use Bundler to install the required gems
     bundle install 
+* download {Twitter Bootstrap}[http://twitter.github.com/bootstrap/] and place it in the <b>public/bootstrap</b> directory
 * start the application
     ./sinc.rb
 * view the application in a web browser and authorize it to use a folder in your Dropbox. 
